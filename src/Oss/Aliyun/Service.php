@@ -4,9 +4,8 @@
 namespace Enoliu\EasyDev\Oss\Aliyun;
 
 use AlibabaCloud\Client\AlibabaCloud;
-use AlibabaCloud\Sts\Sts;
+use AlibabaCloud\Client\Clients\StsClient;
 use OSS\OssClient;
-use think\facade\Filesystem;
 use think\File;
 
 /**
@@ -20,7 +19,6 @@ class Service
      * @var
      */
     private $app;
-
     /**
      * @var OssClient
      */
@@ -73,13 +71,13 @@ class Service
     public function __construct($app)
     {
         $this->app = $app;
-        $this->accessKeyId = $this->app->config['oss']['aliyun']['accessId'];
-        $this->accessKeySecret = $this->app->config['oss']['aliyun']['accessSecret'];;
-        $this->endPoint = $this->app->config['oss']['aliyun']['endPoint'];
+        $this->accessKeyId = $this->app->config['oss']['aliyun']['access_id'];
+        $this->accessKeySecret = $this->app->config['oss']['aliyun']['access_key'];;
+        $this->endPoint = $this->app->config['oss']['aliyun']['end_point'];
         $this->bucket = $this->app->config['oss']['aliyun']['bucket'];
-        $this->isCName = $this->app->config['oss']['aliyun']['isCName'] ?? false;
+        $this->isCName = $this->app->config['oss']['aliyun']['is_cname'] ?? false;
         $this->token = $this->app->config['oss']['aliyun']['token'] ?? null;
-        $this->useSSL = $this->app->config['oss']['aliyun']['useSSL'] ?? false;
+        $this->useSSL = $this->app->config['oss']['aliyun']['use_ssl'] ?? false;
         $this->securityToken = $this->app->config['oss']['aliyun']['securityToken'] ?? null;
     }
 
@@ -98,7 +96,7 @@ class Service
 
         $path = trim($path . '/' . $name . '.' . $file->getOriginalExtension(), '/');
 
-        $this->client->putObject($this->bucket, $path, file_get_contents($file->getRealPath()));
+        $this->ossClient()->putObject($this->bucket, $path, file_get_contents($file->getRealPath()));
 
         return $path;
     }
@@ -172,8 +170,10 @@ class Service
     {
         $this->directUploadConfig = array_merge($this->directUploadConfig, $config);
 
-        AlibabaCloud::accessKeyClient($this->accessKeyId, $this->accessKeySecret)->regionId('cn-beijing')->name('default');
-        $result =Sts::v20150401()
+        AlibabaCloud::accessKeyClient($this->accessKeyId, $this->accessKeySecret)->regionId('cn-beijing')->name(
+            'default'
+        );
+        $result = StsClient::v20150401()
             ->assumeRole()
             ->withRoleArn($this->directUploadConfig['RoleArn'])
             ->withRoleSessionName('douaiwan-sts')
@@ -202,7 +202,7 @@ class Service
      */
     public function delete(string $path): bool
     {
-        return (bool)$this->client->deleteBucket($this->app->config['oss']['aliyun']['bucket'], $path);
+        return (bool)$this->ossClient()->deleteObject($this->app->config['oss']['aliyun']['bucket'], $path);
     }
 
     /**
@@ -216,7 +216,7 @@ class Service
      */
     public function copy(string $path, string $new_path): bool
     {
-        return (bool)$this->client->copyObject($this->bucket, $path, $this->bucket, $new_path);
+        return (bool)$this->ossClient()->copyObject($this->bucket, $path, $this->bucket, $new_path);
     }
 
     /**
@@ -236,6 +236,24 @@ class Service
     }
 
     /**
+     * 路径转url地址
+     *
+     * @param string $path  存储路径
+     *
+     * @return string
+     */
+    public function path2url(string $path): string
+    {
+        return sprintf(
+            "%s%s.%s/%s",
+            $this->useSSL ? 'https://' : 'http://',
+            $this->bucket,
+            trim($this->endPoint, '/'),
+            trim($path, '/')
+        );
+    }
+
+    /**
      * oss实例对象
      *
      * @return OssClient
@@ -243,7 +261,7 @@ class Service
      */
     private function ossClient(): OssClient
     {
-        return $this->client ?: new OssClient(
+        return $this->client ?: $this->client = new OssClient(
             $this->accessKeyId,
             $this->accessKeySecret,
             $this->endPoint,
@@ -285,7 +303,7 @@ class Service
     /**
      * @return string
      */
-    public function getCallbackBodyBase64(): string
+    private function getCallbackBodyBase64(): string
     {
         return base64_encode(
             json_encode(

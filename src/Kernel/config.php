@@ -17,7 +17,15 @@ return [
     // 微信相关配置
     // OSS配置
     'oss'      => [
-        'aliyun' => [],
+        'aliyun' => [
+            'access_id'  => '',
+            'access_key' => '',
+            'end_point'  => '',
+            'bucket'     => '',
+            'is_cname'   => false,
+            'use_ssl'    => false,
+            'token'      => '',
+        ],
         'local'  => [],
     ],
     // 短信相关配置
