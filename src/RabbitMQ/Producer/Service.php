@@ -11,13 +11,17 @@ use PhpAmqpLib\Message\AMQPMessage;
 class Service extends BaseService
 {
     /**
+     * @var
+     */
+    private $callback = null;
+
+    /**
      * @param mixed $message  消息数据
-     * @param mixed $callback  回调执行方法 [className, functionName]
      *
      * @return bool
      * @throws Exception
      */
-    public function publish($message, $callback = []): bool
+    public function publish(...$message): bool
     {
         // 声明交换机
         $this->declareExchange();
@@ -25,7 +29,7 @@ class Service extends BaseService
         $this->declareQueue();
         // 发送消息
         $this->channel->basic_publish(
-            $this->normalizeMessage(compact('message', 'callback')),
+            $this->normalizeMessage(['message' => $message, 'callback' => $this->callback]),
             $this->getExchange((bool)$this->delay),
             $this->getRoutingKey((bool)$this->delay)
         );
@@ -33,6 +37,20 @@ class Service extends BaseService
         $this->close();
 
         return true;
+    }
+
+    /**
+     * 设置消息回调方法
+     *
+     * @param mixed $callback  回调执行方法 [className, functionName] 或方法名，同call_user_func 参数1
+     *
+     * @return $this
+     */
+    public function setCallback($callback = []): self
+    {
+        $this->callback = $callback;
+
+        return $this;
     }
 
     /**

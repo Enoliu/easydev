@@ -16,8 +16,6 @@ class Service extends BaseService
     protected $qos_limit = 1;
 
     /**
-     * @param bool $is_delay
-     *
      * @throws \ErrorException
      */
     public function consume()
@@ -65,6 +63,8 @@ class Service extends BaseService
      * 处理消息回调
      *
      * @param AMQPMessage $message
+     *
+     * @throws \Exception
      */
     private function callback(AMQPMessage $message)
     {
@@ -86,12 +86,17 @@ class Service extends BaseService
                 $message->reject(false);
             } else {
                 // 执行回调方法
-                call_user_func($data['callback'], $data['message']);
+                if (is_array($callback)) {
+                    call_user_func([new $callback[0](), $callback[1]], ...$data['message']);
+                }else {
+                    call_user_func($callback, ...$data['message']);
+                }
                 $message->ack();
             }
         } catch (\Exception $exception) {
             Log::error('RABBITMQ_CALLBACK_ERROR:' . $exception->getMessage());
             $message->reject(false);
+            throw $exception;
         }
     }
 }

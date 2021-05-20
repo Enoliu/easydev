@@ -65,7 +65,7 @@ class BaseService
      *
      * @return $this
      */
-    public function exchange(string $exchange): self
+    public function setExchange(string $exchange): self
     {
         $this->exchange = $exchange;
 
@@ -79,7 +79,7 @@ class BaseService
      *
      * @return $this
      */
-    public function queueName(string $queue_name): self
+    public function setQueueName(string $queue_name): self
     {
         $this->queue_name = $queue_name;
 
@@ -93,7 +93,7 @@ class BaseService
      *
      * @return $this
      */
-    public function routingKey(string $routing_key): self
+    public function setRoutingKey(string $routing_key): self
     {
         $this->routing_key = $routing_key;
 
@@ -184,6 +184,13 @@ class BaseService
         $this->connection->close();
     }
 
+    /**
+     * 获取队列名称
+     *
+     * @param bool $delay  是否为延迟消息
+     *
+     * @return string
+     */
     protected function getQueueName(bool $delay = false): string
     {
         if ($delay) return $this->queue_name . ':delay:' . $this->delay;
@@ -191,6 +198,13 @@ class BaseService
         return $this->queue_name;
     }
 
+    /**
+     * 获取交换机名称
+     *
+     * @param bool $delay  是否为延迟消息
+     *
+     * @return string
+     */
     protected function getExchange(bool $delay = false): string
     {
         if (! $this->exchange) $this->exchange = $this->queue_name;
@@ -200,6 +214,13 @@ class BaseService
         return $this->exchange;
     }
 
+    /**
+     * 获取路由键名称
+     *
+     * @param bool $delay  是否为延迟消息
+     *
+     * @return string
+     */
     protected function getRoutingKey(bool $delay = false): string
     {
         if (! $this->routing_key) $this->routing_key = $this->queue_name;

@@ -14,7 +14,7 @@ if (! function_exists('publish')) {
      */
     function publish($data, $callback, int $delay = 0)
     {
-        Douaiwan::rabbitMQ()->producer->delay($delay)->publish($data, $callback);
+        Douaiwan::rabbitMQ()->producer->delay($delay)->setCallback($callback)->publish($data);
     }
 }
 
