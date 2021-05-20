@@ -19,6 +19,7 @@ class Service
      * @var
      */
     private $app;
+
     /**
      * @var OssClient
      */
@@ -62,10 +63,10 @@ class Service
      * @var array
      */
     private $directUploadConfig = [
-        'dir'      => '',
+        'dir'      => '',   // 上传目录
         'expire'   => 30,   // 秒
         'callback' => '',   // 回调地址
-        'maxSize'  => 10485760    // 文件最大字节数，10M
+        'max_size' => 10485760    // 文件最大字节数，10M
     ];
 
     public function __construct($app)
@@ -134,13 +135,13 @@ class Service
         $policy = $this->getPolicyBase64();
 
         return [
-            'accessKeyId' => $this->accessKeyId,
-            'host'        => $this->bucket . '.' . $this->endPoint,
-            'policy'      => $policy['base64_policy'],
-            'signature'   => base64_encode(hash_hmac('sha1', $policy['base64_policy'], $this->accessKeySecret, true)),
-            'expire'      => $policy['expire_at'],
-            'callback'    => $this->getCallbackBodyBase64(),
-            'dir'         => $config['dir'],
+            'access_id' => $this->accessKeyId,
+            'host'      => $this->bucket . '.' . $this->endPoint,
+            'policy'    => $policy['base64_policy'],
+            'signature' => base64_encode(hash_hmac('sha1', $policy['base64_policy'], $this->accessKeySecret, true)),
+            'expire'    => $policy['expire_at'],
+            'callback'  => $this->getCallbackBodyBase64(),
+            'dir'       => $this->directUploadConfig['dir'],
         ];
     }
 
@@ -152,7 +153,7 @@ class Service
      * @return array
      * @throws \Exception
      */
-    public function miniProgramUpload(array $config): array
+    public function miniProgramUpload(array $config = []): array
     {
         return $this->webUpload($config);
     }
@@ -285,7 +286,7 @@ class Service
                         [
                             0 => 'content-length-range',
                             1 => 0,
-                            2 => $this->directUploadConfig['maxSize'],
+                            2 => $this->directUploadConfig['max_size'],
                         ],
                         [
                             0 => 'starts-with',
