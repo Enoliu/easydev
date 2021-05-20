@@ -29,7 +29,6 @@ class Service
      * @param array  $query  查询参数:[key => value]
      *
      * @return mixed
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function get(string $url, array $query = [])
     {

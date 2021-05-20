@@ -23,6 +23,6 @@ class Application extends ServiceContainer
 
     public function __call($name, $arguments)
     {
-        return call_user_func([$this['base'], $name], $arguments);
+        return call_user_func([$this['base'], $name], ...$arguments);
     }
 }
