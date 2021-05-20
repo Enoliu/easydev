@@ -114,3 +114,19 @@ if (! function_exists('gmt_iso8601')) {
         return $expiration . "Z";
     }
 }
+
+if (! function_exists('is_json')) {
+    /**
+     * 判断字符串是否为json字符串
+     *
+     * @param string $value
+     *
+     * @return bool
+     */
+    function is_json(string $value): bool
+    {
+        $value = json_decode($value, true);
+
+        return ($value && is_object($value)) || ($value && is_array($value));
+    }
+}

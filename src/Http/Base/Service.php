@@ -39,7 +39,7 @@ class Service
             ]
         );
 
-        return json_decode($response->getBody(), true);
+        return $this->decodeContent($response);
     }
 
     /**
@@ -57,7 +57,7 @@ class Service
             ]
         );
 
-        return json_decode($response->getBody(), true);
+        return $this->decodeContent($response);
     }
 
     /**
@@ -75,7 +75,7 @@ class Service
             ]
         );
 
-        return json_decode($response->getBody(), true);
+        return $this->decodeContent($response);
     }
 
     /**
@@ -93,7 +93,7 @@ class Service
             ]
         );
 
-        return json_decode($response->getBody(), true);
+        return $this->decodeContent($response);
     }
 
     /**
@@ -147,5 +147,19 @@ class Service
     private function httpClient(): Client
     {
         return new Client($this->app->config['http']);
+    }
+
+    /**
+     * 解析返回体，优先转化json，不能转化原样返回
+     * @param $response
+     *
+     * @return mixed
+     */
+    private function decodeContent($response)
+    {
+        $content = $response->getBody()->getContents();
+        if (is_json($content)) $content = json_decode($content, true);
+
+        return $content;
     }
 }
