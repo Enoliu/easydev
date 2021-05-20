@@ -1,3 +1,18 @@
+<h1 align="center"> easydev </h1>
+
+<p align="center"> 都爱玩开发工具集合包，基于TP6</p>
+
+
+## 安装
+
+```shell
+composer require enoliu/easydev -vvv
+```  
+## 发布配置文件
+```php
+// 在config目录生成douaiwan.php，根据需求对相应模块进行配置即可，不须全部配置完整  
+php think vendor:publish
+```
 ## HTTP请求  
 #### 对http进行简单封装，常用简单http请求  
 ```php
