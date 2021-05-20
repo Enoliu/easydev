@@ -34,6 +34,7 @@ return [
             'access_key'        => '',
             'access_key_secret' => '',
             'region_id'         => 'cn-hangzhou',
+            'sign_name'         => '',
         ],
     ],
 ];

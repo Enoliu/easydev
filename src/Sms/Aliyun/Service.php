@@ -28,6 +28,10 @@ class Service
      * @var mixed
      */
     private $regionId;
+    /**
+     * @var mixed
+     */
+    private $signName;
 
     public function __construct($app)
     {
@@ -35,6 +39,7 @@ class Service
         $this->accessKeyId = $this->app->config['sms']['aliyun']['access_key'];
         $this->accessKeySecret = $this->app->config['sms']['aliyun']['access_key_secret'];;
         $this->regionId = $this->app->config['sms']['aliyun']['region_id'];
+        $this->signName = $this->app->config['sms']['aliyun']['sign_name'];
         $this->initClientSDK();
     }
 
@@ -49,7 +54,6 @@ class Service
      * 发送短信
      *
      * @param string $phone           手机号
-     * @param string $sign_name       签名
      * @param string $template_code   模板code
      * @param array  $template_param  模板参数 ['code' => '123456']
      *
@@ -57,7 +61,7 @@ class Service
      * @throws \AlibabaCloud\Client\Exception\ClientException
      * @throws \AlibabaCloud\Client\Exception\ServerException
      */
-    public function send(string $phone, string $sign_name, string $template_code, array $template_param = []): array
+    public function send(string $phone, string $template_code, array $template_param = []): array
     {
         return AlibabaCloud::rpc()
             ->product('Dysmsapi')
@@ -67,11 +71,11 @@ class Service
             ->options(
                 [
                     'query' => [
-                        'RegionId'      => "cn-hangzhou",
+                        'RegionId'      => $this->regionId,
                         //需要发送到那个手机
                         'PhoneNumbers'  => $phone,
                         //必填项 签名(需要在阿里云短信服务后台申请)
-                        'SignName'      => $sign_name,
+                        'SignName'      => $this->signName,
                         //必填项 短信模板code (需要在阿里云短信服务后台申请)
                         'TemplateCode'  => $template_code,
                         //如果在短信中添加了${code} 变量则此项必填 要求为JSON格式
