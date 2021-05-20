@@ -14,7 +14,10 @@ return [
         'model'   => '',    // 订单模型
         'timeout' => 30 * 60,   // 订单支付超时时间：30分钟
     ],
-    // 微信相关配置
+    // http相关配置，参考guzzleHttp
+    'http'     => [
+        'timeout' => 10,
+    ],
     // OSS配置
     'oss'      => [
         'aliyun' => [
