@@ -28,30 +28,31 @@ class Service
      *
      * @param File        $file  文件
      * @param string      $path  储存目录
-     * @param string|null $name  自定义文件名，不传则自动生成
+     * @param string|null $name  自定义文件名(不带后缀)，不传则自动生成
      *
      * @return string
      */
     public function upload(File $file, string $path, string $name = null): string
     {
-        if (! $name) $name = $file->hashName();
+        if (! $name) $name = md5((string)microtime(true) . mt_rand(1000, 9999));
 
-        return Filesystem::disk('public')->putFileAs($path, $file, $name . '.' . $file->getExtension());
+        return Filesystem::disk('public')->putFileAs($path, $file, $name . '.' . $file->getOriginalExtension());
     }
 
     /**
      * 多文件上传
      *
-     * @param array  $files  File文件数组，
-     * @param string $path   存储目录
+     * @param array       $files        File文件数组，
+     * @param string      $path         存储目录
+     * @param string|null $prefix_name  批量命名前缀
      *
      * @return array
      */
-    public function batchUpload(array $files, string $path): array
+    public function batchUpload(array $files, string $path, string $prefix_name = null): array
     {
         $save_paths = [];
-        foreach ($files as $file) {
-            $save_paths[] = $this->upload($file, $path);
+        foreach ($files as $key => $file) {
+            $save_paths[] = $this->upload($file, $path, $prefix_name ? $prefix_name . '_' . ++$key : null);
         }
 
         return $save_paths;
