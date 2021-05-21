@@ -39,7 +39,7 @@ class Service extends BaseService
             }
         );
 
-        while($this->channel->is_consuming()) {
+        while ($this->channel->is_consuming()) {
             $this->channel->wait();
         }
 
@@ -78,19 +78,12 @@ class Service extends BaseService
             if (! $callback || empty($callback)) {
                 // 无回调方法，直接ack
                 $message->ack();
-            } elseif (
-                // 有回调信息，但方法不存在，转为死信处理
-                (is_array($callback) && ! method_exists(...$callback))
-                || (is_string($callback) && ! function_exists($callback))
-            ) {
+            } elseif (! is_callable($callback)) {
                 $message->reject(false);
             } else {
                 // 执行回调方法
-                if (is_array($callback)) {
-                    call_user_func([new $callback[0](), $callback[1]], ...$data['message']);
-                }else {
-                    call_user_func($callback, ...$data['message']);
-                }
+                if (is_array($callback)) $callback[0] = new $callback[0]();
+                call_user_func($callback, ...$data['message']);
                 $message->ack();
             }
         } catch (\Exception $exception) {
