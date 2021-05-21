@@ -38,24 +38,66 @@ Douaiwan::redis()->set('key', 'value');
 Douaiwan::redis()->get('key');
 ```
 ## OSS上传相关  
-#### OSS即代表上传，可上传至阿里云和本地
+#### OSS即代表上传，可上传至阿里云和本地，<App直传暂未实现>
 ```php
 use Enoliu\EasyDev\Douaiwan;
 
 // 上传本地相关方法
-string Douaiwan::oss()->local->upload(think\File $file, string $path, string $name = null);
+string Douaiwan::oss()->local->upload(think\File $file, string $path, string $name = null); // $name不带后缀名
 array Douaiwan::oss()->local->batchUpload(array $files, string $path);
 bool Douaiwan::oss()->local->copy($path, $$new_path);
 bool Douaiwan::oss()->local->move($path, $new_path);
 bool Douaiwan::oss()->local->delete($path);
 
 // aliyun相关方法
-string Douaiwan::oss()->aliyun->upload(think\File $file, string $path, string $name = null);
+string Douaiwan::oss()->aliyun->upload(think\File $file, string $path, string $name = null); // $name不带后缀名
 array Douaiwan::oss()->aliyun->batchUpload(array $files, string $path);
 bool Douaiwan::oss()->aliyun->copy($path, $$new_path);
 bool Douaiwan::oss()->aliyun->move($path, $new_path);
 bool Douaiwan::oss()->aliyun->delete($path);
-array Douaiwan::oss()->aliyun->webUpload($config); // web直传配置
-array Douaiwan::oss()->aliyun->miniProgramUpload($config); // 微信小程序直传配置
+// web直传配置, $config = [
+    'dir'      => '',   // 上传目录
+    'expire'   => 30,   // 有效时间：秒
+    'callback' => '',   // 回调地址
+    'max_size' => 10485760    // 文件最大字节数，10M
+];  
+array Douaiwan::oss()->aliyun->webUpload($config); 
+array Douaiwan::oss()->aliyun->miniProgramUpload($config); // 微信小程序直传配置，config同webUpload
 array Douaiwan::oss()->aliyun->appUpload($config); // app直传配置
+```
+
+## 发送短信SMS  
+#### 暂只支持阿里云短信  
+```php
+use Enoliu\EasyDev\Douaiwan;
+
+array Douaiwan::sms()->send('17688xx1590', 'SMS_16xxxx219', ['code' => 123456]);
+```
+
+## 消息队列RabbitMQ  
+  
+### 生产者
+```php
+use Enoliu\EasyDev\Douaiwan;
+
+// 基础用法，setCallback设置回调方法，可被is_callable发现，publish支持可变参数传入，参数将回调给callback，即publish参数需与callback对应
+bool Douaiwan::rabbitMQ()->producer->setCallback('callback|[class,function]')->publish('param1','param2',...);
+// 延迟队列：delay(int $delay = 0), 单位秒
+bool Douaiwan::rabbitMQ()->producer->setCallback('callback|[class,function]')->delay(10)->publish('param1','param2',...);
+// 自定义queue，exchange，routingkey
+bool Douaiwan::rabbitMQ()->producer->setQueueName('queue_name')->setExchange('exchange_name')->setRoutingKey('routing_key')->setCallback('callback|[class,function]')->delay(10)->publish('param1','param2',...);
+
+// 简单方法
+publisher($data, $callback, int $delay = 0);
+```
+  
+### 消费者
+```php
+use Enoliu\EasyDev\Douaiwan;
+
+// qosLimit(int $limit = 1) 消费质量控制
+Douaiwan::rabbitMQ()->consumer->qosLimit(1)->consume();
+
+// 匹配自定义queue，exchange，routingkey，与生产消息时配置信息相对应
+Douaiwan::rabbitMQ()->consumer->setQueueName('queue_name')->setExchange('exchange_name')->setRoutingKey('routing_key')->qosLimit(1)->consume();
 ```

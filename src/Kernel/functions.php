@@ -2,7 +2,7 @@
 
 use Enoliu\EasyDev\Douaiwan;
 
-if (! function_exists('publish')) {
+if (! function_exists('publisher')) {
     /**
      * 加入队列
      *
@@ -12,7 +12,7 @@ if (! function_exists('publish')) {
      *
      * @throws Exception
      */
-    function publish($data, $callback, int $delay = 0)
+    function publisher($data, $callback, int $delay = 0)
     {
         Douaiwan::rabbitMQ()->producer->delay($delay)->setCallback($callback)->publish($data);
     }
