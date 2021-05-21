@@ -44,14 +44,14 @@ use Enoliu\EasyDev\Douaiwan;
 
 // 上传本地相关方法
 string Douaiwan::oss()->local->upload(think\File $file, string $path, string $name = null); // $name不带后缀名
-array Douaiwan::oss()->local->batchUpload(array $files, string $path);
+array Douaiwan::oss()->local->batchUpload(array $files, string $path, string $prefix_name = null);  // $prefix_name批量文件统一命名前缀，文件名称自动跟上序号，如：'prefix_name_1.png'
 bool Douaiwan::oss()->local->copy($path, $$new_path);
 bool Douaiwan::oss()->local->move($path, $new_path);
 bool Douaiwan::oss()->local->delete($path);
 
 // aliyun相关方法
 string Douaiwan::oss()->aliyun->upload(think\File $file, string $path, string $name = null); // $name不带后缀名
-array Douaiwan::oss()->aliyun->batchUpload(array $files, string $path);
+array Douaiwan::oss()->aliyun->batchUpload(array $files, string $path, string $prefix_name = null);  // $prefix_name批量文件统一命名前缀，文件名称自动跟上序号，如：'prefix_name_1.png'
 bool Douaiwan::oss()->aliyun->copy($path, $$new_path);
 bool Douaiwan::oss()->aliyun->move($path, $new_path);
 bool Douaiwan::oss()->aliyun->delete($path);
