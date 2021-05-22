@@ -28,27 +28,28 @@ class Service
         $this->model = new $this->app->config['order']['model']();
     }
 
-    public function createOrder(array $data)
+    public function create()
     {
-        $order = $this->model->save();
-        publish($order->order_no, [self::class, 'closeOrder'], $this->app->config['order']['timeout'] ?? 30 * 60);
+
     }
 
-    /**
-     * 关闭订单
-     *
-     * @param string $order_no
-     *
-     * @return bool
-     */
-    public function closeOrder(string $order_no): bool
+    public function update()
     {
-        $order = $this->queryOrder(['order_no' => $order_no]);
-        if (! $order) return true;
+
     }
 
-    public function queryOrder(array $condition)
+    public function delete()
     {
-        return $this->model->where($condition)->find();
+
+    }
+
+    public function query()
+    {
+
+    }
+
+    public function close()
+    {
+
     }
 }

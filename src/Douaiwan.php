@@ -13,6 +13,7 @@ use think\helper\Str;
  * @method static Oss\Application oss(array $config = [])
  * @method static Sms\Application sms(array $config = [])
  * @method static Http\Application http(array $config = [])
+ * @method static Pay\Application pay(array $config = [])
  */
 class Douaiwan
 {

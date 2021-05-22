@@ -104,3 +104,50 @@ Douaiwan::rabbitMQ()->consumer->setQueueName('queue_name')->setExchange('exchang
 // 简单方法
 consume($qos = 1);
 ```
+## 支付  
+### 微信支付  
+```php
+use Enoliu\EasyDev\Douaiwan;
+
+// 支付下单
+array $result = Douaiwan::pay()->wechat->pay([
+    'body' => '腾讯充值中心-QQ会员充值',  // 商品说明
+    'out_trade_no' => '20150806125346', // 商户自定义订单号
+    'total_fee' => 88,  // 订单金额：分
+    'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
+    'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+    'trade_type' => 'JSAPI', // 请对应换成你的支付方式对应的值类型
+    'openid' => 'oUpF8uMuAJO_M2pxb1Q9zNjWeS6o', // 用户openid
+]);
+// $result:
+{
+    "return_code": "SUCCESS",
+    "return_msg": "OK",
+    "appid": "wx2421b1c4390ec4sb",
+    "mch_id": "10000100",
+    "nonce_str": "IITRi8Iabbblz1J",
+    "openid": "oUpF8uMuAJO_M2pxb1Q9zNjWeSs6o",
+    "sign": "7921E432F65EB8ED0CE9755F0E86D72F2",
+    "result_code": "SUCCESS",
+    "prepay_id": "wx201411102639507cbf6ffd8b0779950874",
+    "trade_type": "JSAPI"
+}
+
+// 查询订单
+array Douaiwan::pay()->wechat->query('out_trade_no');
+// 关闭订单
+array Douaiwan::pay()->wechat->close('out_trade_no');
+// 提现到零钱
+array Douaiwan::pay()->wechat->withdraw([
+    'partner_trade_no' => '1233455', // 商户订单号，需保持唯一性(只能是字母或者数字，不能包含有符号)
+    'openid' => 'oxTWIuGaIt6gTKsQRLau2M0yL16E', // 用户openid
+    'check_name' => 'FORCE_CHECK', // NO_CHECK：不校验真实姓名, FORCE_CHECK：强校验真实姓名
+    're_user_name' => '王小帅', // 如果 check_name 设置为FORCE_CHECK，则必填用户真实姓名
+    'amount' => 10000, // 企业付款金额，单位为分
+    'desc' => '理赔', // 企业付款操作说明信息。必填
+]);
+// 生成前端支付配置信息
+array Douaiwan::pay()->wechat->appConfig('prepay_id');  // app支付
+array Douaiwan::pay()->wechat->bridgeConfig('prepay_id'); // WeixinJSBridge/小程序支付配置信息
+array Douaiwan::pay()->wechat->sdkConfig('prepay_id'); // JSSDK
+```
