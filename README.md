@@ -100,4 +100,7 @@ Douaiwan::rabbitMQ()->consumer->qosLimit(1)->consume();
 
 // 匹配自定义queue，exchange，routingkey，与生产消息时配置信息相对应
 Douaiwan::rabbitMQ()->consumer->setQueueName('queue_name')->setExchange('exchange_name')->setRoutingKey('routing_key')->qosLimit(1)->consume();
+
+// 简单方法
+consume($qos = 1);
 ```
