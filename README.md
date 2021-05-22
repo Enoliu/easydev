@@ -157,6 +157,7 @@ array Douaiwan::pay()->wechat->sdkConfig('prepay_id'); // JSSDK
 ```php
 use Enoliu\EasyDev\Douaiwan;
 
+// APP跳转支付宝客户端支付下单
 array Douaiwan::pay()->alipay->pay([
     'subject' => '购买商品名称',
     'out_trade_no' => '商户自定义订单号',
