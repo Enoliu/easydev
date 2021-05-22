@@ -16,7 +16,8 @@
         "ext-json": "*",
         "aliyuncs/oss-sdk-php": "^2.4",
         "alibabacloud/client": "^1.5",
-        "guzzlehttp/guzzle": "^7.3"
+        "guzzlehttp/guzzle": "^7.3",
+        "alipaysdk/easysdk": "^2.2"
     },
     "autoload": {
         "psr-4": {

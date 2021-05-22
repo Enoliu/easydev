@@ -146,10 +146,28 @@ array Douaiwan::pay()->wechat->withdraw([
     'amount' => 10000, // 企业付款金额，单位为分
     'desc' => '理赔', // 企业付款操作说明信息。必填
 ]);
-// 退款,参数分别为：商户订单号、商户退款单号、订单金额、退款金额、其他参数
-array Douaiwan::pay()->wechat->refund(string $out_trade_no, string $refund_trade_no, int $total_fee, int $refund_fee, array $optional = []);
+// 退款,参数分别为：商户订单号、商户退款单号、订单金额（元）、退款金额（元）、其他参数
+array Douaiwan::pay()->wechat->refund(string $out_trade_no, string $refund_trade_no, mixed $total_fee, mixed $refund_fee, array $optional = []);
 // 生成前端支付配置信息
 array Douaiwan::pay()->wechat->appConfig('prepay_id');  // app支付
 array Douaiwan::pay()->wechat->bridgeConfig('prepay_id'); // WeixinJSBridge/小程序支付配置信息
 array Douaiwan::pay()->wechat->sdkConfig('prepay_id'); // JSSDK
+```
+### 支付宝支付
+```php
+use Enoliu\EasyDev\Douaiwan;
+
+array Douaiwan::pay()->alipay->pay([
+    'subject' => '购买商品名称',
+    'out_trade_no' => '商户自定义订单号',
+    'total_amount' => 8.8, // 订单总金额，单位元，注意微信支付和支付宝支付金额单位不一样
+    'notify_url' => 'http://www.douaiwan.com/alipay/notify' // 订单支付回调地址
+]);
+// 查询订单
+array Douaiwan::pay()->alipay->query('out_trade_no');
+// 关闭订单
+array Douaiwan::pay()->alipay->close('out_trade_no');
+// 退款,参数分别为：商户订单号、商户退款单号、订单金额（元）、退款金额（元）、其他参数
+array Douaiwan::pay()->alipay->refund(string $out_trade_no, string $refund_trade_no, mixed $total_fee, mixed $refund_fee, array $optional = []);
+
 ```

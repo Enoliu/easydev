@@ -96,8 +96,8 @@ class Service
      *
      * @param string $out_trade_no     商户订单号
      * @param string $refund_trade_no  商户退款单号
-     * @param int    $total_fee        订单金额
-     * @param int    $refund_fee       退款金额
+     * @param mixed  $total_amount     订单金额(元)
+     * @param mixed  $refund_amount    退款金额(元)
      * @param array  $optional         其他参数
      *
      * @return array
@@ -106,15 +106,15 @@ class Service
     public function refund(
         string $out_trade_no,
         string $refund_trade_no,
-        int $total_fee,
-        int $refund_fee,
+        $total_amount,
+        $refund_amount,
         array $optional = []
     ): array {
         return $this->payment->refund->byOutTradeNumber(
             $out_trade_no,
             $refund_trade_no,
-            $total_fee,
-            $refund_fee,
+            $total_amount * 100,
+            $refund_amount * 100,
             $optional
         );
     }
@@ -133,6 +133,7 @@ class Service
         if (in_array($name, ['bridgeConfig', 'sdkConfig', 'appConfig'])) {
             return $this->payment->jssdk->{$name}(...$arguments);
         }
+
         return null;
     }
 }
