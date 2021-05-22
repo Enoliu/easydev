@@ -146,6 +146,8 @@ array Douaiwan::pay()->wechat->withdraw([
     'amount' => 10000, // 企业付款金额，单位为分
     'desc' => '理赔', // 企业付款操作说明信息。必填
 ]);
+// 退款,参数分别为：商户订单号、商户退款单号、订单金额、退款金额、其他参数
+array Douaiwan::pay()->wechat->refund(string $out_trade_no, string $refund_trade_no, int $total_fee, int $refund_fee, array $optional = []);
 // 生成前端支付配置信息
 array Douaiwan::pay()->wechat->appConfig('prepay_id');  // app支付
 array Douaiwan::pay()->wechat->bridgeConfig('prepay_id'); // WeixinJSBridge/小程序支付配置信息
