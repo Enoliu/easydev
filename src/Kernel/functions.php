@@ -127,6 +127,6 @@ if (! function_exists('is_json')) {
     {
         $value = json_decode($value, true);
 
-        return ($value && is_object($value)) || ($value && is_array($value));
+        return $value && (is_object($value) || is_array($value));
     }
 }

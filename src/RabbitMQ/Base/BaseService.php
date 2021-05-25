@@ -49,11 +49,11 @@ class BaseService
     {
         $this->app = $app;
         $this->connection = new AMQPStreamConnection(
-            $this->app['config']['rabbitMQ']['host'],
-            $this->app['config']['rabbitMQ']['port'],
-            $this->app['config']['rabbitMQ']['user'],
-            $this->app['config']['rabbitMQ']['password'],
-            $this->app['config']['rabbitMQ']['vhost']
+            $this->app->config['rabbitMQ']['host'],
+            $this->app->config['rabbitMQ']['port'],
+            $this->app->config['rabbitMQ']['user'],
+            $this->app->config['rabbitMQ']['password'],
+            $this->app->config['rabbitMQ']['vhost']
         );
         $this->channel = $this->connection->channel();
     }

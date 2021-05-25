@@ -44,13 +44,27 @@ return [
     'payment'  => [
         'wechat' => [
             // 必要配置
-            'app_id'     => 'xxxx',                 // 应用APPID
-            'mch_id'     => 'your-mch-id',          // 商户号
-            'key'        => 'key-for-signature',    // API 密钥
+            'app_id'     => 'xxxx',                     // 应用APPID
+            'mch_id'     => 'your-mch-id',              // 商户号
+            'key'        => 'key-for-signature',        // API 密钥
             // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
             'cert_path'  => 'path/to/your/cert.pem',    // XXX: 绝对路径！！！！
-            'key_path'   => 'path/to/your/key',     // XXX: 绝对路径！！！！
-            'notify_url' => '默认的订单回调地址',       // 你也可以在下单时单独设置来想覆盖它
+            'key_path'   => 'path/to/your/key',         // XXX: 绝对路径！！！！
+            'notify_url' => '默认的订单回调地址',           // 你也可以在下单时单独设置来想覆盖它
+        ],
+        'alipay' => [
+            'app_id'                => '',  // 支付宝appid
+            'alipay_public_key'     => '',  // 支付宝公钥
+            'merchant_private_key'  => '',  // 商户秘钥
+            'notify_url'            => '',  // 回调地址
+            // 通常只需配置上面几个即可
+            'merchant_cert_path'    => '',  // 商户证书地址：绝对路径
+            'merchant_cert_sn'      => '',  // 商户证书编号
+            'alipay_cert_path'      => '',  // 支付宝证书地址：绝对路径
+            'alipay_cert_sn'        => '',  // 支付宝证书编号
+            'alipay_root_cert_path' => '',  // 阿里支付根证书：绝对路径
+            'alipay_root_cert_sn'   => '',  // 支付宝根证书编号
+            'encrypt_key'           => '',  // 加密密钥
         ],
     ],
 ];

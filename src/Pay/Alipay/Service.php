@@ -134,12 +134,12 @@ class Service
         // appid
         $options->appId = $config['app_id'];
         // 支付宝公钥
-        $options->alipayPublicKey = $config['public_key'];
+        $options->alipayPublicKey = $config['alipay_public_key'];
         // 商户秘钥
         $options->merchantPrivateKey = $config['merchant_private_key'];
         // 商户证书地址
         $options->merchantCertPath = $config['merchant_cert_path'];
-        //商户证书编号
+        // 商户证书编号
         $options->merchantCertSN = $config['merchant_cert_sn'];
         // 支付宝证书地址
         $options->alipayCertPath = $config['alipay_cert_path'];
