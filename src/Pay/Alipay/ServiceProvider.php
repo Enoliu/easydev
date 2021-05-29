@@ -12,7 +12,7 @@ class ServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
-        $app['consumer'] = function ($app) {
+        $app['alipay'] = function ($app) {
             return new Service($app);
         };
     }
