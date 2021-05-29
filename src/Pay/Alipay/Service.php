@@ -137,22 +137,22 @@ class Service
         $options->alipayPublicKey = $config['alipay_public_key'];
         // 商户秘钥
         $options->merchantPrivateKey = $config['merchant_private_key'];
-        // 商户证书地址
-        $options->merchantCertPath = $config['merchant_cert_path'];
-        // 商户证书编号
-        $options->merchantCertSN = $config['merchant_cert_sn'];
-        // 支付宝证书地址
-        $options->alipayCertPath = $config['alipay_cert_path'];
-        // 支付宝证书编号
-        $options->alipayCertSN = $config['alipay_cert_sn'];
-        // 阿里支付根证书
-        $options->alipayRootCertPath = $config['alipay_root_cert_path'];
-        // 支付宝根证书编号
-        $options->alipayRootCertSN = $config['alipay_root_cert_sn'];
         // 回调地址
         $options->notifyUrl = $config['notify_url'];
+        // 商户证书地址
+        $options->merchantCertPath = $config['merchant_cert_path'] ?: null;
+        // 商户证书编号
+        $options->merchantCertSN = $config['merchant_cert_sn'] ?: null;
+        // 支付宝证书地址
+        $options->alipayCertPath = $config['alipay_cert_path'] ?: null;
+        // 支付宝证书编号
+        $options->alipayCertSN = $config['alipay_cert_sn'] ?: null;
+        // 阿里支付根证书
+        $options->alipayRootCertPath = $config['alipay_root_cert_path'] ?: null;
+        // 支付宝根证书编号
+        $options->alipayRootCertSN = $config['alipay_root_cert_sn'] ?: null;
         // 加密密钥
-        $options->encryptKey = $config['encrypt_key'];
+        $options->encryptKey = $config['encrypt_key'] ?: null;
 
         return $options;
     }
