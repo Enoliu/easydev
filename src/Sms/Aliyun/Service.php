@@ -85,4 +85,33 @@ class Service
             )
             ->request()->jsonSerialize();
     }
+
+    /**
+     * 解密手机号
+     *
+     * @param string $access_token  加密token
+     *
+     * @return array
+     * @throws \AlibabaCloud\Client\Exception\ClientException
+     * @throws \AlibabaCloud\Client\Exception\ServerException
+     */
+    public function decryptPhoneNumber(string $access_token): array
+    {
+        return AlibabaCloud::rpc()
+            ->product('Dypnsapi')
+            ->scheme('https') // https | http
+            ->version('2017-05-25')
+            ->action('GetMobile')
+            ->method('POST')
+            ->host('dypnsapi.aliyuncs.com')
+            ->options(
+                [
+                    'query' => [
+                        'RegionId'    => $this->regionId,
+                        'AccessToken' => $access_token,
+                    ],
+                ]
+            )
+            ->request()->jsonSerialize();
+    }
 }

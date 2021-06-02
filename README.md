@@ -71,7 +71,10 @@ array Douaiwan::oss()->aliyun->appUpload($config); // app直传配置
 ```php
 use Enoliu\EasyDev\Douaiwan;
 
+// 发送短信
 array Douaiwan::sms()->send('17688xx1590', 'SMS_16xxxx219', ['code' => 123456]);
+// 解密手机号
+array Douaiwan::sms()->decryptPhoneNumber('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
 ```
 
 ## 消息队列RabbitMQ  

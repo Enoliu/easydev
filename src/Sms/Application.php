@@ -9,6 +9,7 @@ use Enoliu\EasyDev\Kernel\ServiceContainer;
  *
  * @property \Enoliu\EasyDev\Sms\Aliyun\Service $aliyun   阿里云Sms
  * @method array send(string $phone, string $template_code, array $template_param = [])  发送短信（阿里云）
+ * @method array decryptPhoneNumber(string $access_token)  解密手机号（阿里云）
  */
 class Application extends ServiceContainer
 {
