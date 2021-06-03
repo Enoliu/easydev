@@ -5,6 +5,7 @@ namespace Enoliu\EasyDev\Pay\Wechat;
 
 
 use EasyWeChat\Factory;
+use EasyWeChat\Payment\Application;
 
 /**
  * Class Service
@@ -21,7 +22,7 @@ class Service
      */
     private $app;
     /**
-     * @var \EasyWeChat\Payment\Application
+     * @var Application
      */
     private $payment;
 
@@ -29,7 +30,7 @@ class Service
     {
         $this->app = $app;
         $this->app->config['payment']['wechat']['response_type'] = 'array'; // 统一返回数组格式
-        $this->payment = Factory::payment($this->app->config['payment']['wechat']);
+        $this->payment = $this->paymentFactory();
     }
 
     /**
@@ -117,6 +118,14 @@ class Service
             $refund_amount * 100,
             $optional
         );
+    }
+
+    /**
+     * @return Application
+     */
+    public function paymentFactory(): Application
+    {
+        return Factory::payment($this->app->config['payment']['wechat']);
     }
 
     /**
