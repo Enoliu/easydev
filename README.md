@@ -91,7 +91,22 @@ bool Douaiwan::rabbitMQ()->producer->setCallback('callback|[class,function]')->d
 bool Douaiwan::rabbitMQ()->producer->setQueueName('queue_name')->setExchange('exchange_name')->setRoutingKey('routing_key')->setCallback('callback|[class,function]')->delay(10)->publish('param1','param2',...);
 
 // 简单方法
-publisher($data, $callback, int $delay = 0);
+// publisher($data, $callback, int $delay = 0); 取消该简化方法如需，自行封装，以免冲突,如下
+if (! function_exists('publisher')) {
+    /**
+     * 加入队列
+     *
+     * @param mixed $data      消息数据
+     * @param mixed $callback  消息处理方法
+     * @param int   $delay     延迟时间
+     *
+     * @throws Exception
+     */
+    function publisher($data, $callback, int $delay = 0)
+    {
+        Douaiwan::rabbitMQ()->producer->delay($delay)->setCallback($callback)->publish($data);
+    }
+}
 ```
   
 ### 消费者
@@ -105,7 +120,7 @@ Douaiwan::rabbitMQ()->consumer->qosLimit(1)->consume();
 Douaiwan::rabbitMQ()->consumer->setQueueName('queue_name')->setExchange('exchange_name')->setRoutingKey('routing_key')->qosLimit(1)->consume();
 
 // 简单方法
-consume($qos = 1);
+// consume($qos = 1); 取消该简化方法如需，自行封装，以免冲突
 ```
 ## 支付  
 ### 微信支付  
