@@ -2,35 +2,36 @@
 
 use Enoliu\EasyDev\Douaiwan;
 
-if (! function_exists('publisher')) {
-    /**
-     * 加入队列
-     *
-     * @param mixed $data      消息数据
-     * @param mixed $callback  消息处理方法
-     * @param int   $delay     延迟时间
-     *
-     * @throws Exception
-     */
-    function publisher($data, $callback, int $delay = 0)
-    {
-        Douaiwan::rabbitMQ()->producer->delay($delay)->setCallback($callback)->publish($data);
-    }
-}
 
-if (! function_exists('consume')) {
-    /**
-     * 消费队列
-     *
-     * @param int $qos  质量控制参数
-     *
-     * @throws ErrorException
-     */
-    function consume($qos = 1)
-    {
-        Douaiwan::rabbitMQ()->consumer->qosLimit($qos)->consume();
-    }
-}
+//if (! function_exists('publisher')) {
+//    /**
+//     * 加入队列
+//     *
+//     * @param mixed $data      消息数据
+//     * @param mixed $callback  消息处理方法
+//     * @param int   $delay     延迟时间
+//     *
+//     * @throws Exception
+//     */
+//    function publisher($data, $callback, int $delay = 0)
+//    {
+//        Douaiwan::rabbitMQ()->producer->delay($delay)->setCallback($callback)->publish($data);
+//    }
+//}
+//
+//if (! function_exists('consume')) {
+//    /**
+//     * 消费队列
+//     *
+//     * @param int $qos  质量控制参数
+//     *
+//     * @throws ErrorException
+//     */
+//    function consume($qos = 1)
+//    {
+//        Douaiwan::rabbitMQ()->consumer->qosLimit($qos)->consume();
+//    }
+//}
 
 if (! function_exists('redis')) {
     /**
