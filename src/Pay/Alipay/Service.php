@@ -6,6 +6,7 @@ namespace Enoliu\EasyDev\Pay\Alipay;
 
 use Alipay\EasySDK\Kernel\Config;
 use Alipay\EasySDK\Kernel\Factory;
+use Alipay\EasySDK\Kernel\Payment;
 
 class Service
 {
@@ -14,7 +15,7 @@ class Service
      */
     private $app;
     /**
-     * @var \Alipay\EasySDK\Kernel\Payment
+     * @var Payment
      */
     private $payment;
 
@@ -22,7 +23,7 @@ class Service
     {
         $this->app = $app;
         Factory::setOptions($this->getOptions());
-        $this->payment = Factory::payment();
+        $this->payment = $this->factory();
     }
 
     /**
@@ -103,6 +104,16 @@ class Service
             )->refund($out_trade_no, $refund_amount);
 
         return $this->responseMap($response);
+    }
+
+    /**
+     * 返回alipay支付工厂类
+     *
+     * @return Payment
+     */
+    public function factory(): Payment
+    {
+        return Factory::payment();
     }
 
     /**

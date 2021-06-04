@@ -30,7 +30,7 @@ class Service
     {
         $this->app = $app;
         $this->app->config['payment']['wechat']['response_type'] = 'array'; // 统一返回数组格式
-        $this->payment = $this->paymentFactory();
+        $this->payment = $this->factory();
     }
 
     /**
@@ -123,7 +123,7 @@ class Service
     /**
      * @return Application
      */
-    public function paymentFactory(): Application
+    public function factory(): Application
     {
         return Factory::payment($this->app->config['payment']['wechat']);
     }
