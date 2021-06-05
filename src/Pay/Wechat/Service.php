@@ -29,7 +29,6 @@ class Service
     public function __construct($app)
     {
         $this->app = $app;
-        $this->app->config['payment']['wechat']['response_type'] = 'array'; // 统一返回数组格式
         $this->payment = $this->factory();
     }
 
