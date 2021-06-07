@@ -5,6 +5,7 @@ namespace Enoliu\EasyDev\Pay\Alipay;
 
 
 use Alipay\EasySDK\Kernel\Config;
+use Alipay\EasySDK\Kernel\EasySDKKernel;
 use Alipay\EasySDK\Kernel\Factory;
 use Alipay\EasySDK\Kernel\Payment;
 
@@ -18,10 +19,15 @@ class Service
      * @var Payment
      */
     private $payment;
+    /**
+     * @var EasySDKKernel
+     */
+    private $_kernel;
 
     public function __construct($app)
     {
         $this->app = $app;
+        $this->_kernel = new EasySDKKernel($this->getOptions());
         Factory::setOptions($this->getOptions());
         $this->payment = $this->factory();
     }
@@ -43,6 +49,49 @@ class Service
         $response = $handle->pay($data['subject'], $data['out_trade_no'], $data['total_amount']);
 
         return $this->responseMap($response);
+    }
+
+    /**
+     * 支付H5支付GET形式，post形式调用->factory()->wap()->pay()
+     * @param $subject
+     * @param $outTradeNo
+     * @param $totalAmount
+     * @param $quitUrl
+     * @param $returnUrl
+     *
+     * @return string
+     * @throws \Exception
+     *
+     * @author liuxiaolong <595929049@qq.com>
+     * @date   2021/6/7
+     */
+    public function h5pay($subject, $outTradeNo, $totalAmount, $quitUrl, $returnUrl): string
+    {
+        $systemParams = [
+            "method" => "alipay.trade.wap.pay",
+            "app_id" => $this->_kernel->getConfig("appId"),
+            "timestamp" => $this->_kernel->getTimestamp(),
+            "format" => "json",
+            "version" => "1.0",
+            "alipay_sdk" => $this->_kernel->getSdkVersion(),
+            "charset" => "UTF-8",
+            "sign_type" => $this->_kernel->getConfig("signType"),
+            "app_cert_sn" => $this->_kernel->getMerchantCertSN(),
+            "alipay_root_cert_sn" => $this->_kernel->getAlipayRootCertSN()
+        ];
+        $bizParams = [
+            "subject" => $subject,
+            "out_trade_no" => $outTradeNo,
+            "total_amount" => $totalAmount,
+            "quit_url" => $quitUrl,
+            "product_code" => "QUICK_WAP_WAY"
+        ];
+        $textParams = [
+            "return_url" => $returnUrl
+        ];
+        $sign = $this->_kernel->sign($systemParams, $bizParams, $textParams, $this->_kernel->getConfig("merchantPrivateKey"));
+
+        return $this->_kernel->generatePage("GET", $systemParams, $bizParams, $textParams, $sign);
     }
 
     /**
