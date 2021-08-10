@@ -4,6 +4,7 @@
 namespace Enoliu\EasyDev\Pay\Alipay;
 
 
+use Alipay\EasySDK\Kernel\CertEnvironment;
 use Alipay\EasySDK\Kernel\Config;
 use Alipay\EasySDK\Kernel\EasySDKKernel;
 use Alipay\EasySDK\Kernel\Factory;
@@ -110,6 +111,19 @@ class Service
     }
 
     /**
+     * 查询订单是否已支付
+     * @param string $out_trade_no
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function isPay(string $out_trade_no): bool
+    {
+        $result = $this->query($out_trade_no);
+        return isset($result['code']) && $result['code'] == 10000 && isset($result['trade_status']) && $result['trade_status'] == 'TRADE_SUCCESS';
+    }
+
+    /**
      * 关闭订单
      *
      * @param string $out_trade_no
@@ -213,7 +227,15 @@ class Service
         $options->alipayRootCertSN = $config['alipay_root_cert_sn'] ?: null;
         // 加密密钥
         $options->encryptKey = $config['encrypt_key'] ?: null;
-
+        // 文件密钥处理
+        if (!empty($options->alipayCertPath)) {
+            $certEnvironment = new CertEnvironment();
+            $certEnvironment->certEnvironment($options->merchantCertPath, $options->alipayCertPath, $options->alipayRootCertPath);
+            $options->merchantCertSN = $certEnvironment->getMerchantCertSN();
+            $options->alipayRootCertSN = $certEnvironment->getRootCertSN();
+            $options->alipayPublicKey = $certEnvironment->getCachedAlipayPublicKey();
+        }
         return $options;
     }
+
 }

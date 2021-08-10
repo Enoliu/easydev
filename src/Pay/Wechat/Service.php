@@ -62,6 +62,21 @@ class Service
     }
 
     /**
+     * 查询订单是否已支付
+     * @param string $out_trade_no
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function isPay(string $out_trade_no): bool
+    {
+        $result = $this->query($out_trade_no);
+        return ucwords($result['return_code']) == 'SUCCESS' &&
+            ucwords($result['result_code']) == 'SUCCESS' &&
+            ucwords($result['trade_state']) == 'SUCCESS';
+    }
+
+    /**
      * 关闭订单
      *
      * @param string $out_trade_no
